@@ -4,94 +4,56 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Converter — Genius Space</title>
-
-  <!-- Fonts -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js"></script>
-
-  <!-- App Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Ambient Background -->
   <div class="ambg"></div>
 
-  <!-- Header -->
   <header>
     <a class="logo" href="/">
       <div class="logo-icon"><i class="fa-solid fa-repeat"></i></div>
-      <div class="logo-text">
-        <span class="p1">Image</span>
-        <span class="p2">Converter</span>
-      </div>
+      <div class="logo-text"><span class="p1">Image</span><span class="p2">Converter</span></div>
     </a>
     <div class="hlinks">
-      <a class="hlink" href="https://genius-space.org" target="_blank">
-        <i class="fa-solid fa-globe"></i> Genius Space
-      </a>
-      <a class="hlink" href="https://github.com" target="_blank">
-        <i class="fa-brands fa-github"></i> Source
-      </a>
+      <a class="hlink" href="https://genius-space.org" target="_blank"><i class="fa-solid fa-globe"></i> Genius Space</a>
+      <a class="hlink" href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i> Source</a>
     </div>
   </header>
 
-  <!-- Main App -->
   <div class="app">
-
-    <!-- Left Column — Files -->
     <div class="main-col">
 
-      <!-- Input Files Panel -->
+      <!-- Input Panel -->
       <div class="panel">
         <div class="ph">
           <i class="fa-solid fa-images"></i> Input Files
           <span class="badge" id="fileBadge">0 files</span>
         </div>
         <div class="pb">
-
-          <!-- Drop Zone -->
           <div class="drop-zone" id="dropZone">
             <i class="fa-solid fa-cloud-arrow-up dz-icon"></i>
             <div class="dz-title">Drop images, folders, or ZIP files</div>
-            <div class="dz-sub">or <strong>click to browse</strong> • supports batch conversion</div>
+            <div class="dz-sub">or <strong>click to browse</strong> · supports batch conversion</div>
             <div class="dz-formats">
-              <span>HEIC</span>
-              <span>JPG</span>
-              <span>PNG</span>
-              <span>WebP</span>
-              <span>GIF</span>
-              <span>TIFF</span>
-              <span>RAW</span>
-              <span>DNG</span>
-              <span>ZIP</span>
+              <span>HEIC</span><span>JPG</span><span>PNG</span><span>WebP</span>
+              <span>GIF</span><span>TIFF</span><span>DNG</span><span>RAW</span><span>ZIP</span>
             </div>
-            <input type="file" id="fileInput" multiple
-                   accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp,.zip">
+            <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp,.zip">
           </div>
-
-          <!-- Browse Buttons -->
           <div class="input-methods">
-            <button id="btnBrowseFiles">
-              <i class="fa-solid fa-folder-open"></i> Browse Files
-            </button>
-            <button id="btnBrowseFolder">
-              <i class="fa-solid fa-folder-tree"></i> Select Folder
-            </button>
-            <input type="file" id="folderInput" webkitdirectory multiple style="display:none"
-                   accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp">
+            <button id="btnBrowseFiles"><i class="fa-solid fa-folder-open"></i> Browse Files</button>
+            <button id="btnBrowseFolder"><i class="fa-solid fa-folder-tree"></i> Select Folder</button>
+            <input type="file" id="folderInput" webkitdirectory multiple style="display:none" accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp">
           </div>
-
-          <!-- File Queue -->
           <div class="file-list hidden" id="fileList">
             <div class="file-list-header">
               <h3>Queued Files</h3>
@@ -102,7 +64,6 @@
             </div>
             <div class="file-items" id="fileItems"></div>
           </div>
-
         </div>
       </div>
 
@@ -114,33 +75,20 @@
         </div>
         <div class="pb">
           <div class="file-items" id="resultItems"></div>
-          <button class="download-all-btn" id="downloadAllBtn">
-            <i class="fa-solid fa-download"></i> Download All as ZIP
-          </button>
-          <div class="stats-row" id="statsRow">
-            <div class="stat-card">
-              <div class="sv" id="statOriginal">0 MB</div>
-              <div class="sl">Original Size</div>
-            </div>
-            <div class="stat-card">
-              <div class="sv" id="statConverted">0 MB</div>
-              <div class="sl">Converted Size</div>
-            </div>
+          <button class="download-all-btn" id="downloadAllBtn"><i class="fa-solid fa-download"></i> Download All as ZIP</button>
+          <div class="stats-row">
+            <div class="stat-card"><div class="sv" id="statOriginal">0 MB</div><div class="sl">Original Size</div></div>
+            <div class="stat-card"><div class="sv" id="statConverted">0 MB</div><div class="sl">Converted Size</div></div>
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- Right Column — Settings -->
+    <!-- Settings -->
     <div class="side-col">
       <div class="panel panel-sticky">
-        <div class="ph">
-          <i class="fa-solid fa-sliders"></i> Conversion Settings
-        </div>
+        <div class="ph"><i class="fa-solid fa-sliders"></i> Conversion Settings</div>
         <div class="pb">
-
-          <!-- Output Format -->
           <div class="fg">
             <label><i class="fa-solid fa-file-export"></i> Output Format</label>
             <select id="outputFormat">
@@ -150,26 +98,13 @@
               <option value="gif">GIF — Animated support</option>
             </select>
           </div>
-
-          <!-- Quality Slider -->
           <div class="fg" id="qualityGroup">
-            <label>
-              Quality
-              <span class="hn" id="qualityValue">85%</span>
-            </label>
+            <label>Quality <span class="hn" id="qualityValue">85%</span></label>
             <input type="range" id="qualitySlider" min="10" max="100" value="85">
-            <div class="rl">
-              <span>Smaller file</span>
-              <span>Higher quality</span>
-            </div>
+            <div class="rl"><span>Smaller file</span><span>Higher quality</span></div>
           </div>
-
-          <!-- Max Dimension -->
           <div class="fg">
-            <label>
-              <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Max Dimension
-              <span class="hn">(optional)</span>
-            </label>
+            <label><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Max Dimension <span class="hn">(optional)</span></label>
             <select id="maxDimension">
               <option value="0">Original size</option>
               <option value="3840">4K — 3840px</option>
@@ -179,63 +114,86 @@
               <option value="400">Thumbnail — 400px</option>
             </select>
           </div>
-
-          <!-- Toggles -->
           <div class="toggle-row">
             <span><i class="fa-solid fa-signature"></i> Preserve filename</span>
-            <label class="toggle">
-              <input type="checkbox" id="preserveName" checked>
-              <span class="slider"></span>
-            </label>
+            <label class="toggle"><input type="checkbox" id="preserveName" checked><span class="slider"></span></label>
           </div>
-
           <div class="toggle-row">
             <span><i class="fa-solid fa-folder"></i> Maintain folder structure</span>
-            <label class="toggle">
-              <input type="checkbox" id="preserveStructure" checked>
-              <span class="slider"></span>
-            </label>
+            <label class="toggle"><input type="checkbox" id="preserveStructure" checked><span class="slider"></span></label>
           </div>
-
-          <!-- Batch Progress -->
+          <div class="toggle-row">
+            <span><i class="fa-solid fa-eraser"></i> Remove EXIF data</span>
+            <label class="toggle"><input type="checkbox" id="stripExif"><span class="slider"></span></label>
+          </div>
           <div class="batch-progress" id="batchProgress">
             <div class="bp-bar"><div class="bp-fill" id="bpFill"></div></div>
-            <div class="bp-text">
-              <span id="bpLabel">Converting...</span>
-              <span class="bp-count" id="bpCount">0 / 0</span>
-            </div>
+            <div class="bp-text"><span id="bpLabel">Converting...</span><span class="bp-count" id="bpCount">0 / 0</span></div>
           </div>
-
-          <!-- Convert Button -->
-          <button class="convert-btn" id="convertBtn" disabled>
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Convert All
-          </button>
-
+          <button class="convert-btn" id="convertBtn" disabled><i class="fa-solid fa-wand-magic-sparkles"></i> Convert All</button>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- ZIP Extraction Overlay -->
-  <div class="zip-overlay" id="zipOverlay">
-    <div class="zip-modal">
-      <i class="fa-solid fa-file-zipper"></i>
+  <!-- ZIP Overlay -->
+  <div class="modal-overlay" id="zipOverlay">
+    <div class="modal-box">
+      <i class="fa-solid fa-file-zipper modal-icon"></i>
       <h3>Extracting ZIP Archive</h3>
       <p id="zipFileName">archive.zip</p>
       <div class="bp-bar"><div class="bp-fill" id="zipFill"></div></div>
-      <div class="zip-status" id="zipStatus">Initializing...</div>
+      <div class="modal-status" id="zipStatus">Initializing...</div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast">
-    <i class="fa-solid fa-check"></i>
-    <span></span>
+  <!-- Folder Confirmation Modal -->
+  <div class="modal-overlay" id="folderConfirm">
+    <div class="modal-box">
+      <i class="fa-solid fa-folder-open modal-icon" style="color:var(--warn)"></i>
+      <h3>Upload folder to this site?</h3>
+      <p id="folderConfirmText">Upload 0 files to convert.genius-space.org</p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="folderCancel">Cancel</button>
+        <button class="modal-btn confirm" id="folderAccept"><i class="fa-solid fa-upload"></i> Upload</button>
+      </div>
+    </div>
   </div>
 
-  <!-- App Script (defer so DOM is ready) -->
-  <script src="app.js" defer></script>
+  <!-- Image Preview Modal -->
+  <div class="modal-overlay" id="previewModal">
+    <div class="preview-box">
+      <div class="preview-header">
+        <span class="preview-title" id="previewTitle">image.jpg</span>
+        <button class="preview-close" id="previewClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="preview-img-wrap">
+        <img id="previewImg" src="" alt="Preview">
+      </div>
+      <div class="preview-meta" id="previewMeta"></div>
+    </div>
+  </div>
 
+  <!-- EXIF Viewer Modal -->
+  <div class="modal-overlay" id="exifModal">
+    <div class="exif-box">
+      <div class="exif-header">
+        <span class="exif-title" id="exifTitle">EXIF Data</span>
+        <button class="exif-close" id="exifClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="exif-tabs">
+        <button class="exif-tab on" data-tab="before">Before</button>
+        <button class="exif-tab" data-tab="after">After</button>
+      </div>
+      <div class="exif-content" id="exifContent">
+        <div class="exif-empty">No EXIF data found</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><i class="fa-solid fa-check"></i> <span></span></div>
+
+  <script src="app.js"></script>
 </body>
 </html>
