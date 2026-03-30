@@ -13,16 +13,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
+  <script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 </head>
 <body>
   <div class="ambg"></div>
-
   <header>
-    <a class="logo" href="/">
-      <div class="logo-icon"><i class="fa-solid fa-repeat"></i></div>
-      <div class="logo-text"><span class="p1">Image</span><span class="p2">Converter</span></div>
-    </a>
+    <a class="logo" href="/"><div class="logo-icon"><i class="fa-solid fa-repeat"></i></div><div class="logo-text"><span class="p1">Image</span><span class="p2">Converter</span></div></a>
     <div class="hlinks">
       <a class="hlink" href="https://genius-space.org" target="_blank"><i class="fa-solid fa-globe"></i> Genius Space</a>
       <a class="hlink" href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i> Source</a>
@@ -31,28 +30,25 @@
 
   <div class="app">
     <div class="main-col">
-
       <!-- Input Panel -->
       <div class="panel">
-        <div class="ph">
-          <i class="fa-solid fa-images"></i> Input Files
-          <span class="badge" id="fileBadge">0 files</span>
-        </div>
+        <div class="ph"><i class="fa-solid fa-images"></i> Input Files <span class="badge" id="fileBadge">0 files</span></div>
         <div class="pb">
           <div class="drop-zone" id="dropZone">
             <i class="fa-solid fa-cloud-arrow-up dz-icon"></i>
-            <div class="dz-title">Drop images, folders, or ZIP files</div>
+            <div class="dz-title">Drop images, folders, PDFs, or ZIP files</div>
             <div class="dz-sub">or <strong>click to browse</strong> · supports batch conversion</div>
             <div class="dz-formats">
-              <span>HEIC</span><span>JPG</span><span>PNG</span><span>WebP</span>
-              <span>GIF</span><span>TIFF</span><span>DNG</span><span>RAW</span><span>ZIP</span>
+              <span>HEIC</span><span>JPG</span><span>PNG</span><span>WebP</span><span>AVIF</span>
+              <span>GIF</span><span>TIFF</span><span>DNG</span><span>RAW</span><span>PDF</span><span>ZIP</span>
             </div>
-            <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp,.zip">
+            <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp,.avif,.pdf,.zip">
           </div>
           <div class="input-methods">
             <button id="btnBrowseFiles"><i class="fa-solid fa-folder-open"></i> Browse Files</button>
             <button id="btnBrowseFolder"><i class="fa-solid fa-folder-tree"></i> Select Folder</button>
-            <input type="file" id="folderInput" webkitdirectory multiple style="display:none" accept="image/*,.heic,.heif,.cr2,.nef,.arw,.dng,.tiff,.tif,.webp">
+            <button id="btnUrlInput"><i class="fa-solid fa-link"></i> From URL</button>
+            <input type="file" id="folderInput" webkitdirectory multiple style="display:none">
           </div>
           <div class="file-list hidden" id="fileList">
             <div class="file-list-header">
@@ -66,69 +62,172 @@
           </div>
         </div>
       </div>
-
       <!-- Results Panel -->
       <div class="panel hidden" id="resultsPanel" style="margin-top:20px">
-        <div class="ph">
-          <i class="fa-solid fa-circle-check"></i> Converted Files
-          <span class="badge" id="resultBadge">0 files</span>
-        </div>
+        <div class="ph"><i class="fa-solid fa-circle-check"></i> Converted Files <span class="badge" id="resultBadge">0</span></div>
         <div class="pb">
           <div class="file-items" id="resultItems"></div>
-          <button class="download-all-btn" id="downloadAllBtn"><i class="fa-solid fa-download"></i> Download All as ZIP</button>
+          <div class="result-actions">
+            <button class="download-all-btn" id="downloadAllBtn"><i class="fa-solid fa-download"></i> Download All as ZIP</button>
+            <button class="download-all-btn pdf-btn" id="downloadPdfBtn"><i class="fa-solid fa-file-pdf"></i> Export as PDF</button>
+          </div>
           <div class="stats-row">
-            <div class="stat-card"><div class="sv" id="statOriginal">0 MB</div><div class="sl">Original Size</div></div>
-            <div class="stat-card"><div class="sv" id="statConverted">0 MB</div><div class="sl">Converted Size</div></div>
+            <div class="stat-card"><div class="sv" id="statOriginal">0 MB</div><div class="sl">Original</div></div>
+            <div class="stat-card"><div class="sv" id="statConverted">0 MB</div><div class="sl">Converted</div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Settings -->
+    <!-- Settings Column -->
     <div class="side-col">
       <div class="panel panel-sticky">
-        <div class="ph"><i class="fa-solid fa-sliders"></i> Conversion Settings</div>
-        <div class="pb">
-          <div class="fg">
-            <label><i class="fa-solid fa-file-export"></i> Output Format</label>
-            <select id="outputFormat">
-              <option value="png">PNG — Lossless, transparent</option>
-              <option value="jpg" selected>JPG — Small size, universal</option>
-              <option value="webp">WebP — Modern, efficient</option>
-              <option value="gif">GIF — Animated support</option>
-            </select>
-          </div>
-          <div class="fg" id="qualityGroup">
-            <label>Quality <span class="hn" id="qualityValue">85%</span></label>
-            <input type="range" id="qualitySlider" min="10" max="100" value="85">
-            <div class="rl"><span>Smaller file</span><span>Higher quality</span></div>
-          </div>
-          <div class="fg">
-            <label><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Max Dimension <span class="hn">(optional)</span></label>
-            <select id="maxDimension">
-              <option value="0">Original size</option>
-              <option value="3840">4K — 3840px</option>
-              <option value="1920">Full HD — 1920px</option>
-              <option value="1280">HD — 1280px</option>
-              <option value="800">Web — 800px</option>
-              <option value="400">Thumbnail — 400px</option>
-            </select>
-          </div>
-          <div class="toggle-row">
-            <span><i class="fa-solid fa-signature"></i> Preserve filename</span>
-            <label class="toggle"><input type="checkbox" id="preserveName" checked><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span><i class="fa-solid fa-folder"></i> Maintain folder structure</span>
-            <label class="toggle"><input type="checkbox" id="preserveStructure" checked><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span><i class="fa-solid fa-eraser"></i> Remove EXIF data</span>
-            <label class="toggle"><input type="checkbox" id="stripExif"><span class="slider"></span></label>
-          </div>
+        <div class="ph"><i class="fa-solid fa-sliders"></i> Settings</div>
+        <div class="pb settings-scroll">
+
+          <!-- Accordion: Format -->
+          <details class="acc" open>
+            <summary><i class="fa-solid fa-file-export"></i> Format & Quality</summary>
+            <div class="acc-body">
+              <div class="fg">
+                <label>Output Format</label>
+                <select id="outputFormat">
+                  <option value="jpg" selected>JPG — Small size, universal</option>
+                  <option value="png">PNG — Lossless, transparent</option>
+                  <option value="webp">WebP — Modern, efficient</option>
+                  <option value="avif">AVIF — Next-gen compression</option>
+                  <option value="gif">GIF — Static/animated</option>
+                </select>
+              </div>
+              <div class="fg" id="qualityGroup">
+                <label>Quality <span class="hn" id="qualityValue">85%</span></label>
+                <input type="range" id="qualitySlider" min="10" max="100" value="85">
+                <div class="rl"><span>Smaller</span><span>Higher</span></div>
+              </div>
+              <div class="fg">
+                <label><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Max Dimension</label>
+                <select id="maxDimension">
+                  <option value="0">Original size</option>
+                  <option value="3840">4K — 3840px</option>
+                  <option value="1920">Full HD — 1920px</option>
+                  <option value="1280">HD — 1280px</option>
+                  <option value="800">Web — 800px</option>
+                  <option value="400">Thumbnail — 400px</option>
+                </select>
+              </div>
+              <div class="toggle-row"><span>Auto-rotate (EXIF)</span><label class="toggle"><input type="checkbox" id="autoRotate" checked><span class="slider"></span></label></div>
+            </div>
+          </details>
+
+          <!-- Accordion: Naming -->
+          <details class="acc">
+            <summary><i class="fa-solid fa-signature"></i> File Naming</summary>
+            <div class="acc-body">
+              <div class="fg">
+                <label>Rename Pattern</label>
+                <select id="renamePattern">
+                  <option value="preserve">Preserve original name</option>
+                  <option value="random">Random (12 chars)</option>
+                  <option value="sequential">Sequential (001, 002…)</option>
+                  <option value="date">Date-based (YYYYMMDD_HHMMSS)</option>
+                  <option value="prefix">Prefix + original</option>
+                  <option value="suffix">Original + suffix</option>
+                </select>
+              </div>
+              <div class="fg hidden" id="affixGroup">
+                <label id="affixLabel">Prefix</label>
+                <input type="text" class="text-input" id="affixValue" placeholder="e.g. photo_" maxlength="50">
+              </div>
+            </div>
+          </details>
+
+          <!-- Accordion: EXIF -->
+          <details class="acc">
+            <summary><i class="fa-solid fa-circle-info"></i> EXIF / Metadata</summary>
+            <div class="acc-body">
+              <div class="fg">
+                <label>EXIF Handling</label>
+                <select id="exifMode">
+                  <option value="keep">Keep all EXIF data</option>
+                  <option value="strip">Strip all EXIF data</option>
+                  <option value="edit">Edit specific tags</option>
+                </select>
+              </div>
+              <div class="hidden" id="exifEditFields">
+                <div class="fg"><label>Artist / Copyright</label><input type="text" class="text-input" id="exifArtist" placeholder="Leave blank to keep original"></div>
+                <div class="fg"><label>Description</label><input type="text" class="text-input" id="exifDesc" placeholder="Leave blank to keep original"></div>
+                <div class="toggle-row"><span>Strip GPS data</span><label class="toggle"><input type="checkbox" id="exifStripGPS"><span class="slider"></span></label></div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Accordion: Watermark -->
+          <details class="acc">
+            <summary><i class="fa-solid fa-stamp"></i> Watermark</summary>
+            <div class="acc-body">
+              <div class="toggle-row"><span>Enable watermark</span><label class="toggle"><input type="checkbox" id="wmEnable"><span class="slider"></span></label></div>
+              <div class="hidden" id="wmSettings">
+                <div class="fg">
+                  <label>Type</label>
+                  <select id="wmType"><option value="text">Text</option><option value="image">Image</option></select>
+                </div>
+                <div class="fg" id="wmTextGroup">
+                  <label>Text</label>
+                  <input type="text" class="text-input" id="wmText" placeholder="© Your Name" maxlength="100">
+                </div>
+                <div class="fg hidden" id="wmImageGroup">
+                  <label>Image</label>
+                  <input type="file" id="wmImageInput" accept="image/*" class="text-input">
+                </div>
+                <div class="fg">
+                  <label>Position</label>
+                  <select id="wmPosition">
+                    <option value="bottom-right">Bottom Right</option>
+                    <option value="bottom-left">Bottom Left</option>
+                    <option value="top-right">Top Right</option>
+                    <option value="top-left">Top Left</option>
+                    <option value="center">Center</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Opacity <span class="hn" id="wmOpacityVal">50%</span></label>
+                  <input type="range" id="wmOpacity" min="5" max="100" value="50">
+                </div>
+                <div class="fg">
+                  <label>Size <span class="hn" id="wmSizeVal">20%</span></label>
+                  <input type="range" id="wmSize" min="5" max="80" value="20">
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Accordion: Responsive -->
+          <details class="acc">
+            <summary><i class="fa-solid fa-mobile-screen-button"></i> Responsive Sets</summary>
+            <div class="acc-body">
+              <div class="toggle-row"><span>Generate responsive sizes</span><label class="toggle"><input type="checkbox" id="responsiveEnable"><span class="slider"></span></label></div>
+              <div class="hidden" id="responsiveSettings">
+                <div class="fg">
+                  <label>Sizes (px width)</label>
+                  <input type="text" class="text-input" id="responsiveSizes" value="320,640,1024,1920" placeholder="320,640,1024,1920">
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Accordion: Structure -->
+          <details class="acc">
+            <summary><i class="fa-solid fa-folder"></i> Output Options</summary>
+            <div class="acc-body">
+              <div class="toggle-row"><span>Maintain folder structure</span><label class="toggle"><input type="checkbox" id="preserveStructure" checked><span class="slider"></span></label></div>
+            </div>
+          </details>
+
+          <!-- Progress -->
           <div class="batch-progress" id="batchProgress">
             <div class="bp-bar"><div class="bp-fill" id="bpFill"></div></div>
             <div class="bp-text"><span id="bpLabel">Converting...</span><span class="bp-count" id="bpCount">0 / 0</span></div>
+            <div class="bp-eta" id="bpEta"></div>
           </div>
           <button class="convert-btn" id="convertBtn" disabled><i class="fa-solid fa-wand-magic-sparkles"></i> Convert All</button>
         </div>
@@ -136,64 +235,13 @@
     </div>
   </div>
 
-  <!-- ZIP Overlay -->
-  <div class="modal-overlay" id="zipOverlay">
-    <div class="modal-box">
-      <i class="fa-solid fa-file-zipper modal-icon"></i>
-      <h3>Extracting ZIP Archive</h3>
-      <p id="zipFileName">archive.zip</p>
-      <div class="bp-bar"><div class="bp-fill" id="zipFill"></div></div>
-      <div class="modal-status" id="zipStatus">Initializing...</div>
-    </div>
-  </div>
-
-  <!-- Folder Confirmation Modal -->
-  <div class="modal-overlay" id="folderConfirm">
-    <div class="modal-box">
-      <i class="fa-solid fa-folder-open modal-icon" style="color:var(--warn)"></i>
-      <h3>Upload folder to this site?</h3>
-      <p id="folderConfirmText">Upload 0 files to convert.genius-space.org</p>
-      <div class="modal-actions">
-        <button class="modal-btn cancel" id="folderCancel">Cancel</button>
-        <button class="modal-btn confirm" id="folderAccept"><i class="fa-solid fa-upload"></i> Upload</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Image Preview Modal -->
-  <div class="modal-overlay" id="previewModal">
-    <div class="preview-box">
-      <div class="preview-header">
-        <span class="preview-title" id="previewTitle">image.jpg</span>
-        <button class="preview-close" id="previewClose"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="preview-img-wrap">
-        <img id="previewImg" src="" alt="Preview">
-      </div>
-      <div class="preview-meta" id="previewMeta"></div>
-    </div>
-  </div>
-
-  <!-- EXIF Viewer Modal -->
-  <div class="modal-overlay" id="exifModal">
-    <div class="exif-box">
-      <div class="exif-header">
-        <span class="exif-title" id="exifTitle">EXIF Data</span>
-        <button class="exif-close" id="exifClose"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="exif-tabs">
-        <button class="exif-tab on" data-tab="before">Before</button>
-        <button class="exif-tab" data-tab="after">After</button>
-      </div>
-      <div class="exif-content" id="exifContent">
-        <div class="exif-empty">No EXIF data found</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast -->
+  <!-- Modals -->
+  <div class="modal-overlay" id="zipOverlay"><div class="modal-box"><i class="fa-solid fa-file-zipper modal-icon"></i><h3>Extracting ZIP</h3><p id="zipFileName"></p><div class="bp-bar"><div class="bp-fill" id="zipFill"></div></div><div class="modal-status" id="zipStatus"></div></div></div>
+  <div class="modal-overlay" id="folderConfirm"><div class="modal-box"><i class="fa-solid fa-folder-open modal-icon" style="color:var(--warn)"></i><h3>Upload folder to this site?</h3><p id="folderConfirmText"></p><div class="modal-actions"><button class="modal-btn cancel" id="folderCancel">Cancel</button><button class="modal-btn confirm" id="folderAccept"><i class="fa-solid fa-upload"></i> Upload</button></div></div></div>
+  <div class="modal-overlay" id="urlModal"><div class="modal-box"><i class="fa-solid fa-link modal-icon"></i><h3>Load Image from URL</h3><input type="text" class="text-input" id="urlInput" placeholder="https://example.com/image.jpg" style="width:100%;margin:16px 0"><div class="modal-actions"><button class="modal-btn cancel" id="urlCancel">Cancel</button><button class="modal-btn confirm" id="urlAccept"><i class="fa-solid fa-download"></i> Fetch</button></div><div class="modal-status" id="urlStatus"></div></div></div>
+  <div class="modal-overlay" id="previewModal"><div class="preview-box"><div class="preview-header"><span class="preview-title" id="previewTitle"></span><button class="preview-close" id="previewClose"><i class="fa-solid fa-xmark"></i></button></div><div class="preview-img-wrap"><img id="previewImg" src="" alt="Preview"></div><div class="preview-meta" id="previewMeta"></div></div></div>
+  <div class="modal-overlay" id="exifModal"><div class="exif-box"><div class="exif-header"><span class="exif-title" id="exifTitle">EXIF</span><button class="exif-close" id="exifClose"><i class="fa-solid fa-xmark"></i></button></div><div class="exif-tabs"><button class="exif-tab on" data-tab="before">Before</button><button class="exif-tab" data-tab="after">After</button></div><div class="exif-content" id="exifContent"></div></div></div>
   <div class="toast" id="toast"><i class="fa-solid fa-check"></i> <span></span></div>
-
   <script src="app.js"></script>
 </body>
 </html>
