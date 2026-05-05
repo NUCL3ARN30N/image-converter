@@ -537,3 +537,38 @@ function showToast(msg,type){var t=document.getElementById('toast');t.querySelec
 
 // Init
 document.getElementById('outputFormat').dispatchEvent(new Event('change'));
+
+// ================================================================
+// PWA — Service Worker + Install Prompt
+// ================================================================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+    console.log('SW registered:', reg.scope);
+  }).catch(function(err) {
+    console.log('SW registration failed:', err);
+  });
+}
+
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+
+document.getElementById('installBtn').addEventListener('click', function() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(result) {
+    if (result.outcome === 'accepted') {
+      showToast('App installed!', 'success');
+      document.getElementById('installBtn').classList.add('hidden');
+    }
+    deferredPrompt = null;
+  });
+});
+
+window.addEventListener('appinstalled', function() {
+  document.getElementById('installBtn').classList.add('hidden');
+  deferredPrompt = null;
+});

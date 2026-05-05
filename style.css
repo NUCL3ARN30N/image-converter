@@ -158,22 +158,92 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;hei
 
 /* Toast */
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);z-index:9999;padding:12px 24px;background:var(--card);border:1px solid var(--brd);border-radius:var(--r1);color:var(--t1);font-size:13px;font-weight:500;box-shadow:var(--sh);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);display:flex;align-items:center;gap:10px;max-width:90vw}
+/* Install Button */
+.install-btn{background:linear-gradient(135deg,var(--ac),var(--ac2)) !important;color:#fff !important;border-color:transparent !important;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(108,92,231,.3);animation:installPulse 2s ease-in-out infinite}
+.install-btn:hover{box-shadow:0 4px 20px rgba(108,92,231,.5) !important;transform:translateY(-1px)}
+@keyframes installPulse{0%,100%{box-shadow:0 2px 12px rgba(108,92,231,.3)}50%{box-shadow:0 2px 20px rgba(108,92,231,.5)}}
+
 .toast.show{transform:translateX(-50%) translateY(0)}.toast.success{border-color:var(--ok)}.toast.success i{color:var(--ok)}.toast.error{border-color:var(--err)}.toast.error i{color:var(--err)}
 .hidden{display:none !important}
 
 /* Responsive */
 @media(max-width:1024px){.app{grid-template-columns:1fr;padding:20px}.panel-sticky{position:static}header{padding:16px 20px}.logo-text .p1,.logo-text .p2{font-size:22px}.settings-scroll{max-height:none}}
 @media(max-width:640px){
-  header{flex-direction:column;gap:12px;padding:14px 16px}.hlinks{width:100%;justify-content:center;flex-wrap:wrap}
-  .app{padding:12px 10px 60px;gap:12px}.pb{padding:14px}.ph{padding:12px 14px;font-size:13px;gap:8px}
-  .drop-zone{padding:28px 14px}.drop-zone .dz-icon{font-size:32px;margin-bottom:10px}.drop-zone .dz-title{font-size:14px}.drop-zone .dz-sub{font-size:12px}
-  .drop-zone .dz-formats{gap:4px;margin-top:12px}.drop-zone .dz-formats span{font-size:9px;padding:2px 5px}
-  .input-methods{flex-direction:column;gap:6px}.input-methods button{min-width:0}
-  .file-items{max-height:280px}.file-item{padding:8px 10px;gap:8px}.file-item .fi-thumb{width:32px;height:32px;border-radius:5px}
-  .file-item .fi-name{font-size:11.5px}.file-item .fi-meta{gap:4px;font-size:10px}
-  .fi-actions{gap:2px}.fi-act{width:24px;height:24px;font-size:10px}
-  .logo-text .p1,.logo-text .p2{font-size:20px}.logo-icon{width:36px;height:36px;font-size:15px}.logo{gap:10px}.hlink{font-size:12px;padding:6px 10px}
-  .preview-box{width:95vw}.preview-img-wrap{max-height:50vh}.exif-box{width:95%;max-height:70vh}.modal-box{padding:24px}
-  .acc summary{font-size:11.5px;padding:10px 12px}.acc-body{padding:10px 12px}
+  /* Safe area insets for notched devices */
+  body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+  header{flex-direction:column;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top))}
+  .hlinks{width:100%;justify-content:center;flex-wrap:wrap;gap:8px}
+  .hlink{font-size:11.5px;padding:8px 12px}
+  .install-btn{order:-1;width:100%}
+  .app{padding:10px 8px 70px;gap:10px}
+  .pb{padding:12px}.ph{padding:10px 12px;font-size:12.5px;gap:6px}
+  .ph .badge{font-size:10px;padding:2px 8px}
+  /* Drop zone compact on mobile */
+  .drop-zone{padding:24px 12px}
+  .drop-zone .dz-icon{font-size:28px;margin-bottom:8px}
+  .drop-zone .dz-title{font-size:13px}.drop-zone .dz-sub{font-size:11.5px}
+  .drop-zone .dz-formats{gap:3px;margin-top:10px}.drop-zone .dz-formats span{font-size:8.5px;padding:2px 5px}
+  /* Input buttons: larger touch targets */
+  .input-methods{flex-direction:column;gap:6px}
+  .input-methods button{min-width:0;padding:12px;font-size:13px;min-height:44px}
+  /* File items */
+  .file-items{max-height:260px}
+  .file-item{padding:8px;gap:8px}
+  .file-item .fi-thumb{width:34px;height:34px;border-radius:5px}
+  .file-item .fi-name{font-size:11px}
+  .file-item .fi-meta{gap:4px;font-size:9.5px}
+  /* Touch-friendly action buttons (min 44px) */
+  .fi-actions{gap:2px}
+  .fi-act{width:32px;height:32px;font-size:12px;min-width:32px;min-height:32px}
+  /* Accordion */
+  .acc summary{font-size:12px;padding:11px 12px;min-height:44px}
+  .acc-body{padding:10px}
+  /* Form controls: larger touch targets */
+  select,.text-input{font-size:16px;padding:12px;min-height:44px}
+  input[type="range"]{height:8px}
+  input[type="range"]::-webkit-slider-thumb{width:22px;height:22px}
+  .toggle{width:44px;min-width:44px;height:26px}
+  .toggle .slider::before{width:18px;height:18px;top:4px;left:4px}
+  .toggle input:checked+.slider::before{transform:translateX(18px)}
+  .toggle-row{padding:10px 0;gap:8px}
+  .toggle-row>span{font-size:12px}
+  .fg label{font-size:11.5px;margin-bottom:5px}
+  .fg{margin-bottom:10px}
+  /* Buttons */
+  .convert-btn{font-size:14px;padding:14px;margin-top:14px;min-height:48px}
+  .download-all-btn{padding:12px;font-size:12.5px;min-height:44px}
   .result-actions{flex-direction:column}
+  /* Stats */
+  .stats-row{gap:6px}.stat-card{padding:10px}.stat-card .sv{font-size:14px}.stat-card .sl{font-size:9.5px}
+  /* Logo */
+  .logo-text .p1,.logo-text .p2{font-size:20px}.logo-icon{width:36px;height:36px;font-size:15px}.logo{gap:10px}
+  /* Modals: better mobile sizing */
+  .preview-box{width:100vw;max-width:100vw;border-radius:var(--r3) var(--r3) 0 0;max-height:85vh}
+  .preview-img-wrap{max-height:55vh;min-height:150px}
+  .exif-box{width:100%;max-width:100vw;max-height:75vh;border-radius:var(--r3) var(--r3) 0 0}
+  .modal-box{padding:20px;width:92%}
+  .modal-btn{padding:12px 18px;min-height:44px}
+  /* Progress ETA */
+  .bp-eta{font-size:9.5px}
+  .bp-text{font-size:10px}
+  /* Toast further down on mobile */
+  .toast{bottom:20px;padding:10px 18px;font-size:12px;border-radius:var(--r2)}
+}
+
+/* Small phones */
+@media(max-width:380px){
+  .app{padding:8px 6px 60px}
+  .drop-zone{padding:20px 10px}
+  .drop-zone .dz-title{font-size:12.5px}
+  .drop-zone .dz-formats span{font-size:8px;padding:1px 4px}
+  .logo-text .p1,.logo-text .p2{font-size:17px}
+  .logo-icon{width:32px;height:32px;font-size:13px}
+  .ph{font-size:11.5px}
+  .file-item .fi-name{font-size:10.5px}
+}
+
+/* Standalone PWA mode */
+@media(display-mode:standalone){
+  header{padding-top:calc(16px + env(safe-area-inset-top))}
+  .install-btn{display:none !important}
 }

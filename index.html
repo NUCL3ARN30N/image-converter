@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Image Converter — Genius Space</title>
+  <meta name="description" content="Client-side batch image converter with drag & drop, PDF support, watermarks, EXIF editing & more">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Image Converter">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -23,6 +30,7 @@
   <header>
     <a class="logo" href="/"><div class="logo-icon"><i class="fa-solid fa-repeat"></i></div><div class="logo-text"><span class="p1">Image</span><span class="p2">Converter</span></div></a>
     <div class="hlinks">
+      <button class="hlink install-btn hidden" id="installBtn"><i class="fa-solid fa-download"></i> Install App</button>
       <a class="hlink" href="https://genius-space.org" target="_blank"><i class="fa-solid fa-globe"></i> Genius Space</a>
       <a class="hlink" href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i> Source</a>
     </div>
